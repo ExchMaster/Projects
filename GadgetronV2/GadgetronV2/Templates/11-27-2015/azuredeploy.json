@@ -1,0 +1,81 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "Admin username"
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Admin password"
+      }
+    },
+    "storAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of premium storage account which will host the OS disk for this deployment."
+      }
+    },
+    "vmNamePrefix": {
+      "type": "string",
+      "defaultValue": "myVM",
+      "metadata": {
+        "description": "Prefix for all VM's created as part of this deployment.  myVM1, myVM2"
+      }
+    },
+    "addressPrefix": {
+      "type": "string",
+      "defaultValue": "10.0.246.0/23"
+    },
+    "subnetName": {
+      "type": "string",
+      "defaultValue": "Subnet-1"
+    },
+    "subnetPrefix": {
+      "type": "string",
+      "defaultValue": "10.0.247.0/24",
+      "metadata": {
+        "description": "Must fall within the address space defined by 'Address Space'"
+      }
+    }
+  },
+  "variables": {
+    "basesharinguri": "https://raw.githubusercontent.com/ExchMaster/gadgetron/master/Gadgetron/Templates/",
+    "masternodetemplateuri": "[concat(variables('basesharinguri'),'grelayhost.json')]"
+  },
+  "resources": [
+    {
+      "name": "grelayhost",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [ ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('masternodetemplateuri')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "adminUsername": {"value": "[parameters('adminUsername')]" },
+          "adminPassword": {"value": "[parameters('adminPassword')]" },
+          "storAccountName": {"value": "[parameters('storAccountName')]" },
+          "vmNamePrefix": {"value": "[parameters('vmNamePrefix')]" },
+          "addressPrefix": {"value": "[parameters('addressPrefix')]" },
+          "subnetName": {"value": "[parameters('subnetName')]" },
+          "subnetPrefix": {"value": "[parameters('subnetPrefix')]" }          
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "relayHostIPAddress": {
+      "type": "string",
+      "value": "[reference('grelayhost').outputs.relayhostip.value]"
+
+    }
+  }
+}
