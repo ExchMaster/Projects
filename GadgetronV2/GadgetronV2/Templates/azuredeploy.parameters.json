@@ -5,9 +5,6 @@
         "adminUsername": {
             "value": "gadgetron"
         },
-        "adminPassword": {
-            "value": "P@ssword*321"
-        },
         "instanceCount": {
             "value": 5
         }
