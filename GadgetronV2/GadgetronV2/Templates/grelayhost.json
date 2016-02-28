@@ -292,6 +292,10 @@
       "name": "[concat(variables('vmNamePrefix'), copyIndex(), '/configStor')]",
       "apiVersion": "2015-06-15",
       "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "extensionLoopNode",
+        "count": "[variables('numberOfInstances')]"
+      },
       "dependsOn": [
         "[concat('Microsoft.Compute/virtualMachines/', variables('vmNamePrefix'),0)]"
       ],
