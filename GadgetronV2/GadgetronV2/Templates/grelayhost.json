@@ -289,7 +289,7 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "<extension-deployment-name>",
+      "name": "[concat(variables('vmNamePrefix'), copyIndex(), '/configStor')]",
       "apiVersion": "2015-06-15",
       "location": "[resourceGroup().location]",
       "dependsOn": [
