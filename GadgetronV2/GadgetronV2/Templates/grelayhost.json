@@ -306,15 +306,16 @@
           "docker": {
             "port": "",
             "options": [
-              "--net=host"
+              ""
             ]
           },
           "compose": {
             "gt01": {
-              "image": "gadgetron/ubuntu_1404_no_cuda",             
+              "image": "gadgetron/ubuntu_1404_no_cuda",
               "environment": [
                 "[concat('GADGETRON_RELAY_HOST=',reference(concat(variables('nicNamePrefix'),0)).ipConfigurations[0].properties.privateIPAddress)]"
               ],
+              "net": "host",
               "restart": "always"
             }
           
