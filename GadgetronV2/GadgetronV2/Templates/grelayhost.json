@@ -66,7 +66,7 @@
     "vmNamePrefix": "[resourceGroup().name]",
     "shareAccountID": "jaigcentral",
     "shareName": "gshare",
-    "shareAccountKey": "[listKeys(variables('shareAccountID'),'2015-05-01-preview').key1]",
+    "shareAccountKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts',variables('shareAccountID')) ,'2015-06-15').key1]",
     "storAccountName": "[concat(resourceGroup().name,'sa')]",
     "numberOfInstances": 1,
     "dnsNameforLBIP": "[variables('vmNamePrefix')]",
@@ -290,6 +290,26 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "<extension-deployment-name>",
+      "apiVersion": "2015-06-15",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', variables('vmNamePrefix'),0)]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.OSTCExtensions",
+        "type": "CustomScriptForLinux",
+        "typeHandlerVersion": "1.4",
+        "settings": {
+          "fileUris": [
+            "https://raw.githubusercontent.com/ExchMaster/Projects/master/GadgetronV2/GadgetronV2/Templates/configStor.sh"
+          ],
+          "commandToExecute": "[concat('configStor.sh ',variables('shareAccountID'),' ',variables('ShareName'),' ',listKeys(resourceId('Microsoft.Storage/storageAccounts',variables('shareAccountID')) ,'2015-06-15').key1)]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(variables('vmNamePrefix'), copyIndex(), '/DockerExtension')]",
       "apiVersion": "2015-06-15",
       "location": "[resourceGroup().location]",
@@ -321,8 +341,8 @@
               "net": "host",
               "restart": "always"
             }
-          
-            }
+
+          }
         }
       }
     }
