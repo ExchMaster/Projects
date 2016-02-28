@@ -350,10 +350,6 @@
     "relayhostip": {
       "value": "[reference(concat(variables('nicNamePrefix'),0)).ipConfigurations[0].properties.privateIPAddress]",
       "type": "string"
-    },
-    "ShareKey": {
-      "value": "[variables('shareAccountKey')]",
-      "type": "string"
     }
   }
 }

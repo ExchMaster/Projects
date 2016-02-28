@@ -157,10 +157,6 @@
     "relayHostIPAddress": {
       "type": "string",
       "value": "[reference('grelayhost').outputs.relayhostip.value]"
-    },
-    "SharedAccountKey": {
-      "type": "string",
-      "value": "[reference('grelayhost').outputs.ShareKey.value]"
     }
   }
 }
