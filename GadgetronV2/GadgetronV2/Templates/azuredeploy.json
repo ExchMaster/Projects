@@ -105,7 +105,7 @@
         }
       }
     },
-   /* {
+    {
       "name": "gtronvmss",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
@@ -128,8 +128,8 @@
           "subnetName1": { "value": "[parameters('subnetName')]" }          
         }
       }
-    },*/
-   /* {
+    },
+    {
       "name": "gtronsshvmss",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2015-01-01",
@@ -151,7 +151,7 @@
           "subnetName1": { "value": "[parameters('subnetName')]" }
         }
       }
-    }*/
+    }
   ],
   "outputs": {
     "relayHostIPAddress": {

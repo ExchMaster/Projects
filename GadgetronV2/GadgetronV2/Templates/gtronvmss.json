@@ -34,9 +34,9 @@
     "instanceCount": {
       "type": "int",
       "metadata": {
-        "description": "Number of VM instances (100 or less)."
+        "description": "Number of VM instances (40 or less)."
       },
-      "maxValue": 100
+      "maxValue": 40
     },
     "subnetName1": {
       "type": "string"
@@ -72,6 +72,8 @@
       "[concat(uniqueString(concat(resourceGroup().id, deployment().name, variables('newStorageAccountSuffix'), '4')))]"
     ],
     "vhdContainerName": "[concat(variables('namingInfix'), 'vhd')]",
+    "shareAccountID": "gtronlsa",
+    "shareName": "gshare",
     "osDiskName": "[concat(variables('namingInfix'), 'osdisk')]",
     "addressPrefix": "10.0.0.0/16",
     "subnetPrefix": "10.0.0.0/24",
@@ -95,7 +97,7 @@
       "version": "latest"
     },
     "imageReference": "[variables('osType')]",
-      "wadProcessorMetricName": "\\Processor\\PercentProcessorTime"
+    "wadProcessorMetricName": "\\Processor\\PercentProcessorTime"
   },
   "resources": [
     {
@@ -210,18 +212,14 @@
         "virtualMachineProfile": {
           "storageProfile": {
             "osDisk": {
-              "vhdContainers": [
-                "[concat('https://', variables('uniqueStringArray')[0], variables('newStorageAccountSuffix'), '.blob.core.windows.net/', variables('vhdContainerName'))]",
-                "[concat('https://', variables('uniqueStringArray')[1], variables('newStorageAccountSuffix'), '.blob.core.windows.net/', variables('vhdContainerName'))]",
-                "[concat('https://', variables('uniqueStringArray')[2], variables('newStorageAccountSuffix'), '.blob.core.windows.net/', variables('vhdContainerName'))]",
-                "[concat('https://', variables('uniqueStringArray')[3], variables('newStorageAccountSuffix'), '.blob.core.windows.net/', variables('vhdContainerName'))]",
-                "[concat('https://', variables('uniqueStringArray')[4], variables('newStorageAccountSuffix'), '.blob.core.windows.net/', variables('vhdContainerName'))]"
-              ],
               "name": "[variables('osDiskName')]",
               "caching": "ReadOnly",
-              "createOption": "FromImage"
-            },
-            "imageReference": "[variables('imageReference')]"
+              "createOption": "FromImage",
+              "osType": "linux",
+              "image": {
+                "uri": "https://gtronlsa.blob.core.windows.net/vhds/gtronk0.vhd"
+              }
+            }
           },
           "osProfile": {
             "computerNamePrefix": "[variables('namingInfix')]",
@@ -256,92 +254,28 @@
           "extensionProfile": {
             "extensions": [
               {
-                "name": "gtrondockerext",
-                "properties": {
-                  "publisher": "Microsoft.Azure.Extensions",
-                  "type": "DockerExtension",
-                  "typeHandlerVersion": "1.0",
-                  "autoUpgradeMinorVersion": true,
-                  "settings": {
-                    "docker": {
-                      "port": "",
-                      "options": [
-                        "--registry-mirror=http://10.0.247.4:5000"
-                      ]
-                    },
-          "compose": {
-            "gt01": {
-              "image": "gadgetron/ubuntu_1404_no_cuda",
-              "ports": [
-                "9002:9002",
-                "8090:8090",
-                "9080:9080",
-                "8002:8002",
-                "18002:18002"
-              ],
-              "environment": [
-                "[concat('GADGETRON_RELAY_HOST=',parameters('masterIP'))]"
-              ],
-              "restart": "always"
-            }
-          }
-        }
+                {
+                  "type": "Microsoft.Compute/virtualMachines/extensions",
+                  "name": "configStor",
+                  "apiVersion": "2015-06-15",
+                  "location": "[resourceGroup().location]",
+                  "properties": {
+                    "publisher": "Microsoft.OSTCExtensions",
+                    "type": "CustomScriptForLinux",
+                    "typeHandlerVersion": "1.4",
+                    "settings": {
+                      "fileUris": [
+                        "https://raw.githubusercontent.com/ExchMaster/Projects/master/GadgetronV2/GadgetronV2/Templates/configStor.sh"
+                      ],
+                      "commandToExecute": "[concat('sh configStor.sh ',variables('shareAccountID'),' ',variables('ShareName'),' ',listKeys(resourceId('Microsoft.Storage/storageAccounts',variables('shareAccountID')) ,'2015-06-15').key1)]"
+                    }
+                  }
                 }
               }
             ]
           }
         }
-      },
-        "resources": [
-            {
-                "name": "autoscalewad",
-                "type": "Microsoft.Insights/autoscaleSettings",
-                "location": "[parameters('resourceLocation')]",
-                "apiVersion": "2014-04-01",
-                "dependsOn": [
-                    "[concat('Microsoft.Compute/virtualMachineScaleSets/', variables('namingInfix'))]"
-                ],
-                "tags": {
-                    "displayName": "gtronautoscale AutoScale"
-                },
-                "properties": {
-                    "name": "autoscalewad",
-                    "targetResourceUri": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', variables('namingInfix'))]",
-                    "enabled": true,
-                    "profiles": [
-                        {
-                            "name": "Profile1",
-                            "capacity": {
-                                "minimum": "5",
-                                "maximum": "30",
-                                "default": "5"
-                            },
-                            "rules": [
-                                {
-                                    "metricTrigger": {
-                                        "metricName": "[variables('wadProcessorMetricName')]",
-                                        "metricNamespace": "",
-                                        "metricResourceUri": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', variables('namingInfix'))]",
-                                        "timeGrain": "PT1M",
-                                        "statistic": "Average",
-                                        "timeWindow": "PT5M",
-                                        "timeAggregation": "Average",
-                                        "operator": "GreaterThan",
-                                        "threshold": 10
-                                    },
-                                    "scaleAction": {
-                                        "direction": "Increase",
-                                        "type": "ChangeCount",
-                                        "value": "10",
-                                        "cooldown": "PT5M"
-                                    }
-                                }                                
-                            ]
-                        }
-                    ]
-                }
-            }
-        ]
+      }
     }
   ]
 }
