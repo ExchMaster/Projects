@@ -55,26 +55,7 @@
       "metadata": {
         "description": "Admin password on all VMs."
       }
-    },
-      "_artifactsLocation": {
-          "type": "string",
-          "metadata": {
-              "description": "Auto-generated container in staging storage account to receive post-build staging folder upload"
-          }
-      },
-      "_artifactsLocationSasToken": {
-          "type": "securestring",
-          "metadata": {
-              "description": "Auto-generated token to access _artifactsLocation"
-          }
-      },
-      "projectName": {
-          "type": "string",
-          "minLength": 1,
-          "metadata": {
-              "description": "Name of this project"
-          }
-      }
+    }
   },
   "variables": {
     "vmNamePrefix": "[resourceGroup().name]",
