@@ -356,7 +356,7 @@
       "type": "string"
     },
     "cmdstring": {
-      "value": "[concat('configStor.sh ',variables('shareAccountID'),' ',variables('ShareName'),' ',listKeys(resourceId('Microsoft.Storage/storageAccounts',variables('shareAccountID')) ,'2015-06-15').key1)]",
+      "value": "[concat('sh configStor.sh ',variables('shareAccountID'),' ',variables('ShareName'),' ',listKeys(resourceId('Microsoft.Storage/storageAccounts',variables('shareAccountID')) ,'2015-06-15').key1)]",
       "type": "string"
     }
   }
