@@ -307,10 +307,10 @@
           "fileUris": [
             "https://raw.githubusercontent.com/ExchMaster/Projects/master/GadgetronV2/GadgetronV2/Templates/configStor.sh"
           ],
-          "commandToExecute": "[concat('configStor.sh ',variables('shareAccountID'),' ',variables('ShareName'),' ',listKeys(resourceId('Microsoft.Storage/storageAccounts',variables('shareAccountID')) ,'2015-06-15').key1)]"
+          "commandToExecute": "hostname"
         }
       }
-    },
+    }/*,
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(variables('vmNamePrefix'), copyIndex(), '/DockerExtension')]",
@@ -348,11 +348,15 @@
           }
         }
       }
-    }
+    } */
   ],
   "outputs": {
     "relayhostip": {
       "value": "[reference(concat(variables('nicNamePrefix'),0)).ipConfigurations[0].properties.privateIPAddress]",
+      "type": "string"
+    },
+    "cmdstring": {
+      "value": "[concat('configStor.sh ',variables('shareAccountID'),' ',variables('ShareName'),' ',listKeys(resourceId('Microsoft.Storage/storageAccounts',variables('shareAccountID')) ,'2015-06-15').key1)]",
       "type": "string"
     }
   }
