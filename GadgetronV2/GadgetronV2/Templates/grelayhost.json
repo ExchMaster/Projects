@@ -64,7 +64,7 @@
   },
   "variables": {
     "vmNamePrefix": "[resourceGroup().name]",
-    "shareAccountID": "gtronjshare",
+    "shareAccountID": "gtronlsa",
     "shareName": "gshare",
     "storAccountName": "[concat(resourceGroup().name,'sa')]",
     "numberOfInstances": 1,
@@ -263,14 +263,12 @@
           }
         },
         "storageProfile": {
-          "imageReference": {
-            "publisher": "[variables('imagePublisher')]",
-            "offer": "[variables('imageOffer')]",
-            "sku": "[variables('imageSKU')]",
-            "version": "latest"
-          },
           "osDisk": {
             "name": "osdisk",
+            "osType": "linux",
+            "image": {
+              "uri": "https://gtronlsa.blob.core.windows.net/vhds/gtronk0.vhd"
+            },
             "vhd": {
               "uri": "[concat('http://',variables('storAccountName'),'.blob.core.windows.net/vhds/',variables('vmNamePrefix'), copyindex(), '.vhd')]"
             },
