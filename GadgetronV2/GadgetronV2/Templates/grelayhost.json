@@ -64,7 +64,7 @@
   },
   "variables": {
     "vmNamePrefix": "[resourceGroup().name]",
-    "shareAccountID": "gtrongshare",
+    "shareAccountID": "gtronhshare",
     "shareName": "gshare",
     "storAccountName": "[concat(resourceGroup().name,'sa')]",
     "numberOfInstances": 1,
@@ -307,7 +307,7 @@
           "fileUris": [
             "https://raw.githubusercontent.com/ExchMaster/Projects/master/GadgetronV2/GadgetronV2/Templates/configStor.sh"
           ],
-          "commandToExecute": "hostname"
+          "commandToExecute": "[concat('sh configStor.sh ',variables('shareAccountID'),' ',variables('ShareName'),' ',listKeys(resourceId('Microsoft.Storage/storageAccounts',variables('shareAccountID')) ,'2015-06-15').key1)]"
         }
       }
     }/*,
