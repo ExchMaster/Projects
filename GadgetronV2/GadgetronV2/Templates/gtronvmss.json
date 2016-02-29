@@ -271,8 +271,7 @@
           },
           "extensionProfile": {
             "extensions": [
-              {
-                {
+              {                
                   "name": "configstor",
                   "properties": {
                     "publisher": "Microsoft.OSTCExtensions",
@@ -284,9 +283,7 @@
                       ],
                       "commandToExecute": "[concat('sh configStor.sh ',variables('shareAccountID'),' ',variables('ShareName'),' ',listKeys(resourceId('Microsoft.Storage/storageAccounts',variables('shareAccountID')) ,'2015-06-15').key1)]"
                     }
-                  }
-                  
-                }
+                  }               
               }
             ]
           }
