@@ -55,7 +55,26 @@
       "metadata": {
         "description": "Admin password on all VMs."
       }
-    }
+    },
+      "_artifactsLocation": {
+          "type": "string",
+          "metadata": {
+              "description": "Auto-generated container in staging storage account to receive post-build staging folder upload"
+          }
+      },
+      "_artifactsLocationSasToken": {
+          "type": "securestring",
+          "metadata": {
+              "description": "Auto-generated token to access _artifactsLocation"
+          }
+      },
+      "projectName": {
+          "type": "string",
+          "minLength": 1,
+          "metadata": {
+              "description": "Name of this project"
+          }
+      }
   },
   "variables": {
     "vmNamePrefix": "[resourceGroup().name]",
@@ -96,8 +115,7 @@
       "sku": "[parameters('ubuntuOSVersion')]",
       "version": "latest"
     },
-    "imageReference": "[variables('osType')]",
-    "wadProcessorMetricName": "\\Processor\\PercentProcessorTime"
+    "imageReference": "[variables('osType')]"
   },
   "resources": [
     {
@@ -255,10 +273,7 @@
             "extensions": [
               {
                 {
-                  "type": "Microsoft.Compute/virtualMachines/extensions",
-                  "name": "configStor",
-                  "apiVersion": "2015-06-15",
-                  "location": "[resourceGroup().location]",
+                  "name": "configstor",
                   "properties": {
                     "publisher": "Microsoft.OSTCExtensions",
                     "type": "CustomScriptForLinux",
@@ -270,6 +285,7 @@
                       "commandToExecute": "[concat('sh configStor.sh ',variables('shareAccountID'),' ',variables('ShareName'),' ',listKeys(resourceId('Microsoft.Storage/storageAccounts',variables('shareAccountID')) ,'2015-06-15').key1)]"
                     }
                   }
+                  
                 }
               }
             ]
