@@ -3,7 +3,7 @@
 apt-get -qq install cifs-utils -y
 
 #Create directory, udpate fstab, mount Azure file share
-mkdir /AzFiles/$2
+mkdir -p /AzFiles/$2
 echo "//$1.file.core.windows.net/$2 /AzFiles/$2 cifs vers=3.0,username=$1,password=$3,dir_mode=0777,file_mode=0777" >> /etc/fstab
 mount -a
 

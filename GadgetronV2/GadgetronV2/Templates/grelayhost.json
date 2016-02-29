@@ -64,7 +64,7 @@
   },
   "variables": {
     "vmNamePrefix": "[resourceGroup().name]",
-    "shareAccountID": "gtronishare",
+    "shareAccountID": "gtronjshare",
     "shareName": "gshare",
     "storAccountName": "[concat(resourceGroup().name,'sa')]",
     "numberOfInstances": 1,
